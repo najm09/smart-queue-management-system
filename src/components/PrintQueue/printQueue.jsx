@@ -5,7 +5,6 @@ import { PatientContext } from "../../contexts/patient.context";
 import { useContext } from "react";
 
 const PrintQueue = ({ data, edit }) => {
-  // console.log("data: ", data);
   const { deleteUserPatient } = useContext(PatientContext);
 
   return (
@@ -18,7 +17,7 @@ const PrintQueue = ({ data, edit }) => {
             <tr>
               <th>S. no</th>
               <th>Name</th>
-              <th>Rank</th>
+              <th>Patient No.</th>
               {edit && <th>Edit</th>}
               {edit && <th>Delete</th>}
             </tr>

@@ -1,82 +1,63 @@
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import GetDate from "../Date/date.components.jsx";
+import { useState } from "react";
+import "./PatientForm.styles.scss";
+import FormInput from "../formInput/formInput.components";
 
-const theme = createTheme();
+function titleCase(str) {
+  return str
+    .split(/(?=[A-Z])/)
+    .map(function (word) {
+      return word.replace(word[0], word[0].toUpperCase());
+    })
+    .join(" ");
+}
 
-const PatientForm = ({
-  handleChange,
-  handleSubmit,
-  formFields,
-  ButtonValue,
-}) => {
-  function titleCase(str) {
-    return str
-      .split(/(?=[A-Z])/)
-      .map(function (word) {
-        return word.replace(word[0], word[0].toUpperCase());
-      })
-      .join(" ");
-  }
+const PatientForm = ({ handleChange, handleSubmit, formFields, ButtonValue }) => {
+  const [displayDate, setDisplayDate] = useState(false);
+
+  const handleDisplayDate = () => {
+    setDisplayDate(!displayDate);
+  };
+
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Typography component="h1" variant="h5">
-            Register New Patient
-          </Typography>
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ mt: 3 }}
-          >
-            <Grid container spacing={2}>
-              {Object.keys(formFields).map((defaultFormField) => (
-                <Grid
-                  item
-                  xs={12}
-                  sm={defaultFormField.length < 6 ? 6 : 12}
-                  key={defaultFormField}
-                >
-                  <TextField
-                    fullWidth
-                    required
-                    id={defaultFormField}
+    <center>
+      <form onSubmit={handleSubmit}>
+        <h1>{ButtonValue === "Update" ? "Update Patient" : "Register New Patient"}</h1>
+
+        {Object.keys(formFields).map((defaultFormField, i) => {
+          if (defaultFormField[0] === "_" || defaultFormField === "registeredBy") {
+          } else if (defaultFormField === "date") {
+            return (
+              <div onClick={handleDisplayDate} className="date-selector">
+                Click here to select Date
+                  <GetDate
+                    key={i}
                     label={titleCase(defaultFormField)}
+                    // required
                     name={defaultFormField}
                     value={formFields[defaultFormField]}
-                    onChange={handleChange}
+                    handleChange={handleChange}
+                    days={60}
                   />
-                </Grid>
-              ))}
+              </div>
+            );
+          } else
+            return (
+              <FormInput
+                key={i}
+                label={titleCase(defaultFormField)}
+                // required
+                name={defaultFormField}
+                value={formFields[defaultFormField]}
+                onChange={handleChange}
+              />
+            );
+        })}
 
-              <Grid item xs={12} sm={12}>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
-                  {ButtonValue}
-                </Button>
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-      </Container>
-    </ThemeProvider>
+        <button type="submit">{ButtonValue}</button>
+      </form>
+    </center>
   );
 };
 
